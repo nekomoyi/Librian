@@ -6,3 +6,8 @@ node_modules/
 error.log
 /存檔資料/
 /librian本體/project/
+build
+dist
+*.kuzu
+*.cmd
+*.egg-info

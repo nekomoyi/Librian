@@ -229,18 +229,16 @@ class 讀者句控制:
     def 鏡頭(讀者, 鏡頭符號, 內容):
         if 鏡頭符號 == '+':
             try:
-                d = yaml.load(內容)
+                d = yaml.safe_load(內容)
                 鏡頭.生成鏡頭(d)
             except Exception as e:
-                logging.exception(e)
-                logging.warning(f'鏡頭「{內容}」的內容不正確。')
+                logging.exception(f'鏡頭「{內容}」的內容不正確。')
             讀者.步進()
         elif 鏡頭符號 == '-':
             try:
-                鏡頭.解除鏡頭(yaml.load(內容))
+                鏡頭.解除鏡頭(yaml.safe_load(內容))
             except Exception as e:
-                logging.exception(e)
-                logging.warning(f'鏡頭「{內容}」的內容不正確。')
+                logging.exception(f'鏡頭「{內容}」的內容不正確。')
             讀者.步進()
 
     @staticmethod

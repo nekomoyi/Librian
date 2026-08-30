@@ -17,7 +17,7 @@ from .librian虛擬機 import 虛擬機環境
 
 
 def 啓動app():
-    if 配置['編寫模式']:
+    if 配置['編寫模式'] or 配置['跳過標題畫面']:
         url = 路徑.librian本體 / '前端/adv.html'
     elif 虛擬機環境.標題畫面:
         url = f'{虛擬機環境.工程路徑}/{虛擬機環境.標題畫面}'

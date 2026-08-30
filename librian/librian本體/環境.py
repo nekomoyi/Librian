@@ -11,7 +11,7 @@ def 導入全局配置(a):
 
 
 with open(os.path.split(os.path.realpath(__file__))[0] + '/配置.yaml', encoding='utf8') as f:
-    配置 = yaml.load(f)
+    配置 = yaml.safe_load(f)
     logging_config = {
         'format': '【%(filename)s - %(lineno)s】(%(levelname)s): %(message)s',
     }

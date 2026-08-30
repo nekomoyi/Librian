@@ -162,6 +162,8 @@ class 極山彥(帶標題山彥):
             t = threading.Thread(target=監視)
             t.setDaemon(True)
             t.start()
+        elif 配置['跳過標題畫面']:
+            self.步進()
 
     def 更新終態(self):
         self.讀者.從一而終(f'{虛擬機環境.工程路徑}/{虛擬機環境.劇本入口}')
