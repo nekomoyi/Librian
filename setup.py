@@ -4,7 +4,7 @@ from pathlib import Path
 
 setuptools.setup(
     name='librian',
-    version='2.1.0',
+    version='2.2.0',
     author='RimoChan',
     author_email='the@librian.net',
     description='librian',
@@ -30,7 +30,7 @@ setuptools.setup(
     ],
     install_requires=[
         'liber>=1.0.1',
-        'rimo_utils>=1.4.1',
+        'rimo_utils>=1.9.0',
         'cefpython3>=66.1',
         'wxPython>=4.0.4',
         'cloudpickle>=1.2.2',

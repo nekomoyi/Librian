@@ -17,9 +17,17 @@ from .librian虛擬機 import 虛擬機環境
 from .環境 import 配置
 
 
+當前山彥 = None
+
+
 def 綁定(app, 標題url):
-    讀者實例 = 讀者.讀者(f'{虛擬機環境.工程路徑}/{虛擬機環境.劇本入口}')
-    app.frame.set_browser_object("山彥", 極山彥(app.frame, app.frame.browser, 讀者實例, 標題url))
+    global 當前山彥
+    if 配置['監聽模式']:
+        讀者實例 = 讀者.讀者(None)
+    else:
+        讀者實例 = 讀者.讀者(f'{虛擬機環境.工程路徑}/{虛擬機環境.劇本入口}')
+    當前山彥 = 極山彥(app.frame, app.frame.browser, 讀者實例, 標題url)
+    app.frame.set_browser_object("山彥", 當前山彥)
 
 
 class 山彥(vue_ob):
@@ -159,8 +167,7 @@ class 極山彥(帶標題山彥):
                         if 字 != 原字:
                             self.更新終態()
                             原字 = 字
-            t = threading.Thread(target=監視)
-            t.setDaemon(True)
+            t = threading.Thread(target=監視, daemon=True)
             t.start()
         elif 配置['跳過標題畫面']:
             self.步進()

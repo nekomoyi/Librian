@@ -2,7 +2,6 @@ import os
 import logging
 
 import yaml
-yaml.warnings({'YAMLLoadWarning': False})
 
 
 def 導入全局配置(a):

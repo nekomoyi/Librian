@@ -2,6 +2,7 @@ import sys
 import subprocess
 from pathlib import Path
 
+import requests
 import unittest
 from rimo_utils import good_open
 import liber.core
@@ -44,11 +45,20 @@ class 全部測試(unittest.TestCase):
     def test_main(self):
         for 跳過標題畫面 in ['True', 'False']:
             try:
-                print([sys.executable, '-m', 'librian', '--project', 根 / 'librian面板/librian面板/模板/潘大爺的模板'])
                 subprocess.run([sys.executable, '-m', 'librian', '--project', 根 / 'librian面板/librian面板/模板/潘大爺的模板', '--跳過標題畫面', 跳過標題畫面], timeout=3)
                 self.fail()
             except subprocess.TimeoutExpired:
                 pass
+
+    def test_port(self):
+        proc = subprocess.Popen([sys.executable, '-m', 'librian', '--project', 根 / 'librian面板/librian面板/模板/潘大爺的模板', '--監聽模式', 'True'])
+        for _ in range(2):
+            r = requests.post('http://localhost:8000/liber', json={
+                "content": "> BG 和風縁側\n潘大爺 「好！」"
+            })
+            r.raise_for_status()
+            print(r.text)
+        proc.terminate()
 
 
 unittest.main()

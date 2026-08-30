@@ -92,8 +92,8 @@ class 劇本:
 
 
 class 讀者:
-    def __init__(self, 初始劇本):
-        self.劇本棧 = [self.編譯(初始劇本)]
+    def __init__(self, 初始劇本=None):
+        self.劇本棧 = [self.編譯(初始劇本)] if 初始劇本 else []
         self.狀態 = 狀態()
         self.狀態.重置()
         self.箱庭 = 箱庭.箱庭(self)
@@ -116,6 +116,10 @@ class 讀者:
     def 編譯(self, s):
         with good_open(s) as f:
             return 劇本(liber.load(f), s)
+
+    def 動態執行(self, 文本):
+        self.劇本棧.append(劇本(liber.load(文本), 'agent'))
+        self.步進()
 
     def 步進(self, 防止終焉=False):
         s = self.下一句()
