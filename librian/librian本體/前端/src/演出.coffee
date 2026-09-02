@@ -3,6 +3,7 @@ import opencc from 'node-opencc'
 
 import 控制 from './控制.coffee'
 import psd處理 from './psd處理.coffee'
+import 調用山彥 from './後端.coffee'
 
 
 export default 演出 = 
@@ -41,11 +42,11 @@ export default 演出 =
         setTimeout(演出.縮放調整, 200)
 
     更新: (瞬間化=false)->
-        山彥.狀態回調 false, (狀態, 步進=false)->
+        調用山彥('狀態回調', [false]).then (狀態)->
             演出.改變演出狀態(狀態, 瞬間化)
             
     步進更新: (瞬間化=false)->
-        山彥.狀態回調 true, (狀態)->
+        調用山彥('狀態回調', [true]).then (狀態)->
             演出.改變演出狀態(狀態, 瞬間化)
             
     翻譯: (s)->

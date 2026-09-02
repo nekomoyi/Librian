@@ -9,7 +9,7 @@
 
 ——來像 Markdown 一樣寫 Galgame 劇本吧！
 
-Librian 是容易上手的 Galgame 引擎，Librian 由 Python 和 JavaScript 編寫而成，基於 CEFPython 前端。  
+Librian 是容易上手的 Galgame 引擎，Librian 由 Python 和 JavaScript 編寫而成，基於 pywebview 前端。
 
 Librian 適用於快速高效的 ADV 實現，能將你的奇思妙想迅速轉換爲成果——你只需提供素材文件和简单的劇本就能做出 Galgame！
 
