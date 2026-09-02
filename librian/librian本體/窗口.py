@@ -1,13 +1,18 @@
 import os
 import logging
+import platform
 import tempfile
 
 from librian.librian_util import 文件
-try:
-    from rimo_utils.cef_tools import wxcef
-except ModuleNotFoundError:
-    logging.warning('沒能import wx，改爲使用pyside2。')
-    from rimo_utils.cef_tools import qtcef as wxcef
+
+if platform.system() == 'Darwin':
+    from . import webview窗口 as wxcef
+else:
+    try:
+        from rimo_utils.cef_tools import wxcef
+    except ModuleNotFoundError:
+        logging.warning('沒能import wx，改爲使用pyside2。')
+        from rimo_utils.cef_tools import qtcef as wxcef
 
 from librian.librian_util import 路徑
 

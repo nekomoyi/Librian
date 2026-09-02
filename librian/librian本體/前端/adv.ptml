@@ -3,6 +3,7 @@ html:
         title:
         meta charset='utf-8'; 
         link rel="stylesheet" href='./黑科技/font-awesome-4.7.0/css/font-awesome.css';
+        script src='./pywebview橋.js':
         script src='./虛擬核心.js':
         script src='./dist/bundle.js':
         

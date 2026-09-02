@@ -2,6 +2,7 @@ html:
     head:
         meta http-equiv="Content-Type" content="text/html; charset=utf-8";
         link rel='stylesheet' href='./樣式.css';
+        script src="../pywebview橋.js":
         script src="./定位.js":
     body.synth:
         div#bb:

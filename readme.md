@@ -55,6 +55,16 @@ Librian 是面向劇本的引擎，賣點是:
     - 這需要本地 Python 爲 3.6 或 3.7 版本
     - 它不太穩定，所以最好先更新一下 pip 和 setuptools，要是裝不上我也沒辦法……
 
+### macOS Apple Silicon
+
+macOS ARM64 使用系統 WKWebView，不依賴 CEFPython。推薦使用 Python 3.9：
+
+```sh
+uv venv --python 3.9 .venv
+uv pip install --python .venv/bin/python \
+  "git+https://github.com/nekomoyi/Librian.git@macos-arm64"
+```
+
 ## Liber 分析器
 
 Liber 分析器是 Librian 用來分析劇本語言 Liber 的工具。  
