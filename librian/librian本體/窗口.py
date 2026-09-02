@@ -1,14 +1,8 @@
 import os
-import logging
+import platform
 import tempfile
 
 from librian.librian_util import 文件
-try:
-    from rimo_utils.cef_tools import wxcef
-except ModuleNotFoundError:
-    logging.warning('沒能import wx，改爲使用pyside2。')
-    from rimo_utils.cef_tools import qtcef as wxcef
-
 from librian.librian_util import 路徑
 
 from . import 山彥
@@ -32,15 +26,22 @@ def 啓動app():
     else:
         圖標 = 路徑.librian本體 / '資源/librian.ico'
 
-    cache_path = os.path.join(tempfile.gettempdir(), 'librian_cef')
+    if platform.system() == 'Darwin':
+        from .webview窗口 import 創建窗口
+        cache_name = 'librian_webview'
+    else:
+        from .cef窗口 import 創建窗口
+        cache_name = 'librian_cef'
+
+    cache_path = os.path.join(tempfile.gettempdir(), cache_name)
     os.makedirs(cache_path, exist_ok=True)
 
-    app, 瀏覽器 = wxcef.group(
+    app = 創建窗口(
         title=虛擬機環境.標題,
         url=標題url,
         icon=圖標,
         size=虛擬機環境.主解析度,
-        cache_path=cache_path,
+        storage_path=cache_path,
     )
     山彥.綁定(app, 標題url=標題url)
 

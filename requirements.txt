@@ -1,7 +1,8 @@
 liber>=1.0.1
 rimo_utils>=1.4.1
-cefpython3>=66.0
-wxPython>=4.0.4
+cefpython3>=66.0 ; sys_platform != "darwin"
+wxPython>=4.0.4 ; sys_platform != "darwin"
+pywebview>=6.0 ; sys_platform == "darwin"
 cloudpickle>=1.2.2
 opencc>=1.1.1
 PyYAML>=5.2
@@ -9,4 +10,3 @@ fire>=0.2.1
 dulwich>=0.19.14
 requests>=2.24.0
 libsass>=0.20.0
-AppKit>=0.2.8 ; sys_platform == 'darwin'

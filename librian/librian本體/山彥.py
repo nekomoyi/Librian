@@ -7,7 +7,6 @@ import datetime
 
 import yaml
 from rimo_utils import good_open
-from rimo_utils.cef_tools.vue_ob import vue_ob
 
 from librian.librian_util import 文件, 加載器, 路徑
 
@@ -20,28 +19,27 @@ from .環境 import 配置
 當前山彥 = None
 
 
-def 綁定(app, 標題url):
+def 綁定(窗口, 標題url):
     global 當前山彥
     if 配置['監聽模式']:
         讀者實例 = 讀者.讀者(None)
     else:
         讀者實例 = 讀者.讀者(f'{虛擬機環境.工程路徑}/{虛擬機環境.劇本入口}')
-    當前山彥 = 極山彥(app.frame, app.frame.browser, 讀者實例, 標題url)
-    app.frame.set_browser_object("山彥", 當前山彥)
+    當前山彥 = 極山彥(窗口, 讀者實例, 標題url)
+    窗口.綁定(當前山彥)
 
 
-class 山彥(vue_ob):
-    def __init__(self, 窗口, 瀏覽器, 讀者, 標題url):
-        super().__init__()
+class 山彥:
+    def __init__(self, 窗口, 讀者, 標題url):
         self.窗口 = 窗口
-        self.瀏覽器 = 瀏覽器
         self.讀者 = 讀者
         self.標題url = 標題url
+        self._vue狀態 = {}
 
     def js(self, x):
-        self.瀏覽器.ExecuteJavascript(x)
+        self.窗口.執行js(x)
 
-    def 取檔(self, callback):
+    def 取檔(self):
         檔表 = os.listdir(f'{虛擬機環境.工程路徑}/存檔資料/手動存檔')
         檔表 = sorted(檔表, reverse=True)
         檔信息表 = []
@@ -58,7 +56,7 @@ class 山彥(vue_ob):
             except Exception as e:
                 logging.exception(e)
                 logging.warning(f'存檔「{i}」有問題。')
-        callback.Call(檔信息表)
+        return 檔信息表
 
     def 存檔(self, 文件名, 描述, 截圖):
         存檔信息 = {
@@ -81,17 +79,17 @@ class 山彥(vue_ob):
         self.更新(瞬間化=True)
 
     def 切換全屏(self):
-        self.窗口.toggleFullScreen()
+        self.窗口.切換全屏()
         
     def 退出(self):
-        exit()
+        self.窗口.關閉()
 
     def vue更新(self, 內容):
-        t = self.vue.用戶設置 if '用戶設置' in self.vue._內容 else None
+        t = self._vue狀態.get('用戶設置')
         if t != 內容['用戶設置']:
             with open(f'{虛擬機環境.工程路徑}/存檔資料/用戶設置.yaml', 'w', encoding='utf8') as f:
                 f.write(yaml.dump(內容['用戶設置']))
-        super().vue更新(內容)
+        self._vue狀態 = 內容
 
 
 class 演出山彥(山彥):
@@ -108,27 +106,29 @@ class 演出山彥(山彥):
         狀態 = self.讀者.狀態.導出()
         self.js(f'_py演出.改變演出狀態({json.dumps(狀態)},{json.dumps(瞬間化)})')
 
-    def 狀態回調(self, 步進, callback):
+    def 狀態回調(self, 步進):
         if 步進:
             self.步進()
-        狀態 = self.讀者.狀態.導出()
-        callback.Call(狀態)
+        return self.讀者.狀態.導出()
 
-    def 初始化(self, callback):
-        self.vue.圖片文件夾 = 虛擬機環境.工程路徑 / 虛擬機環境.圖片文件夾
-        self.vue.音樂文件夾 = 虛擬機環境.工程路徑 / 虛擬機環境.音樂文件夾
-        self.vue.視頻文件夾 = 虛擬機環境.工程路徑 / 虛擬機環境.視頻文件夾
-        self.vue.psd立繪路徑 = 虛擬機環境.psd立繪路徑
-        self.vue.自定css = [虛擬機環境.工程路徑 / i for i in 虛擬機環境.自定css]
-        self.vue.主題css = os.path.join('主題', 虛擬機環境.主題css + '.css').replace('\\', '/')
-        self.vue.解析度 = 虛擬機環境.主解析度
-        self.vue.邊界 = 配置['顯示繪圖邊界']
-        self.vue.翻譯 = 虛擬機環境.翻譯
+    def 初始化(self):
+        內容 = {
+            '圖片文件夾': 虛擬機環境.工程路徑 / 虛擬機環境.圖片文件夾,
+            '音樂文件夾': 虛擬機環境.工程路徑 / 虛擬機環境.音樂文件夾,
+            '視頻文件夾': 虛擬機環境.工程路徑 / 虛擬機環境.視頻文件夾,
+            'psd立繪路徑': 虛擬機環境.psd立繪路徑,
+            '自定css': [虛擬機環境.工程路徑 / i for i in 虛擬機環境.自定css],
+            '主題css': os.path.join('主題', 虛擬機環境.主題css + '.css').replace('\\', '/'),
+            '解析度': 虛擬機環境.主解析度,
+            '邊界': 配置['顯示繪圖邊界'],
+            '翻譯': 虛擬機環境.翻譯,
+        }
 
         用戶設置 = 加載器.yaml(f'{虛擬機環境.工程路徑}/存檔資料/用戶設置.yaml')
         if 用戶設置:
-            self.vue.用戶設置 = 用戶設置
-        callback.Call()
+            內容['用戶設置'] = 用戶設置
+        self._vue狀態 = 內容
+        return 內容
 
     def 選(self, 參數):
         t = self.讀者.狀態.選項[參數][1]
@@ -177,6 +177,7 @@ class 極山彥(帶標題山彥):
         self.更新()
 
     def 初始化(self, *li, **d):
-        super().初始化(*li, **d)
+        內容 = super().初始化(*li, **d)
         if 配置['編寫模式']:
             self.更新終態()
+        return 內容

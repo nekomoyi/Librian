@@ -4,6 +4,7 @@ import $ from 'jquery'
 import 演出 from './演出.coffee'
 import 控制 from './控制.coffee'
 import 存檔讀檔 from './存檔讀檔.coffee'
+import 調用山彥 from './後端.coffee'
 
 cccc = require('./_統合.sass')
 console.log cccc
@@ -63,19 +64,21 @@ window.onload = ->
                 handler: (val, oldVal) ->
                     山彥.vue更新(val)
                 deep: true
-    山彥.vue連接初始化((x)-> 
-        for a,b of x
-            v[a]=b
-    )
     if 入口=='讀檔'
-        山彥.初始化 ->
+        初始化().then ->
             演出.準備工作()
             存檔讀檔.讀檔準備()
     else
-        山彥.初始化 ->
+        初始化().then ->
             演出.準備工作()
             演出.更新()
-        
+
+初始化 = ->
+    調用山彥('初始化').then (狀態)->
+        if 狀態
+            for 鍵, 值 of 狀態
+                v[鍵] = 值
+
 
 
 從虛擬核心提取資源 = (心)->
@@ -94,7 +97,7 @@ window.onload = ->
 
 window.加載完成的初始化 = ->
     $('#加載畫面').fadeOut()
-    山彥.初始化 ->
+    初始化().then ->
         演出.準備工作()
         演出.更新()
 
