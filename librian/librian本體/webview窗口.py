@@ -25,14 +25,8 @@ class WebView窗口:
     def 執行js(self, script):
         return self._window.evaluate_js(script)
 
-    def 載入(self, url):
-        return self._window.load_url(_本地網址(url))
-
     def 切換全屏(self):
         return self._window.toggle_fullscreen()
-
-    def 關閉(self):
-        return self._window.destroy()
 
     def 運行(self):
         if self._api is None:
@@ -71,7 +65,11 @@ class WebView窗口:
         return round(外框矩形.size.width), round(外框矩形.size.height)
 
     def _注入橋(self):
-        self._window.run_js(橋腳本.read_text(encoding='utf8'))
+        當前網址 = urlsplit(self._window.get_current_url())
+        if dict(parse_qsl(當前網址.query)).get('_librian_exit') == '1':
+            self._window.destroy()
+        else:
+            self._window.run_js(橋腳本.read_text(encoding='utf8'))
 
 
 def _本地網址(url):

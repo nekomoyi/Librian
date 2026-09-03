@@ -40,5 +40,5 @@ setuptools.setup(
         'requests>=2.24.0',
         'libsass>=0.20.0',
     ],
-    python_requires='>=3.6,<3.10',
+    python_requires='>=3.7',
 )

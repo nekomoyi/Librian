@@ -1,18 +1,5 @@
-import os
-
-
-def _可序列化(值):
-    if isinstance(值, os.PathLike):
-        return os.fspath(值)
-    if isinstance(值, dict):
-        return {鍵: _可序列化(內容) for 鍵, 內容 in 值.items()}
-    if isinstance(值, (list, tuple)):
-        return [_可序列化(內容) for 內容 in 值]
-    return 值
-
-
 class 山彥API:
-    """Librian 前端可調用的完整 API。"""
+    """Librian 前端可調用的後端 API。"""
 
     def __init__(self, 山彥):
         self._山彥 = 山彥
@@ -21,7 +8,7 @@ class 山彥API:
         return self._山彥.vue更新(內容)
 
     def 取檔(self):
-        return _可序列化(self._山彥.取檔())
+        return self._山彥.取檔()
 
     def 存檔(self, 文件名, 描述, 截圖):
         return self._山彥.存檔(文件名, 描述, 截圖)
@@ -38,9 +25,6 @@ class 山彥API:
     def 切換全屏(self):
         return self._山彥.切換全屏()
 
-    def 退出(self):
-        return self._山彥.退出()
-
     def 回標題(self):
         return self._山彥.回標題()
 
@@ -51,10 +35,10 @@ class 山彥API:
         return self._山彥.更新(瞬間化)
 
     def 狀態回調(self, 步進):
-        return _可序列化(self._山彥.狀態回調(步進))
+        return self._山彥.狀態回調(步進)
 
     def 初始化(self):
-        return _可序列化(self._山彥.初始化())
+        return self._山彥.初始化()
 
     def 選(self, 參數):
         return self._山彥.選(參數)

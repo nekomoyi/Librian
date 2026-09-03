@@ -8,12 +8,12 @@ const bridge = fs.readFileSync(bridgePath, 'utf8');
 
 function loadBridge(search, api) {
     const window = {
-        location: { search },
+        location: { search, href: `file:///title.html${search}` },
         pywebview: { api },
         addEventListener() {},
     };
-    vm.runInNewContext(bridge, { window, URLSearchParams, Promise, Proxy, Array });
-    return window.山彥;
+    vm.runInNewContext(bridge, { window, URL, URLSearchParams, Promise, Proxy, Array });
+    return window;
 }
 
 async function main() {
@@ -35,13 +35,21 @@ async function main() {
             return Promise.resolve();
         },
     };
-    const 山彥 = loadBridge('?_librian_webview=1', api);
+    const window = loadBridge('?_librian_webview=1', api);
+    const 山彥 = window.山彥;
 
     const results = await Promise.allSettled([山彥.slow(), 山彥.fail(), 山彥.fast()]);
 
     assert.deepStrictEqual(calls, ['slow:start', 'slow:end', 'fail', 'fast']);
     assert.deepStrictEqual(results.map(result => result.status), ['fulfilled', 'rejected', 'fulfilled']);
-    assert.strictEqual(loadBridge('', api), undefined);
+    for (const method of ['回標題', '開始', '讀檔畫面', '從劇本開始']) {
+        api[method] = () => Promise.resolve('file:///game/adv.html?入口=讀檔');
+        await 山彥[method]();
+        assert.strictEqual(window.location.href, 'file:///game/adv.html?%E5%85%A5%E5%8F%A3=%E8%AE%80%E6%AA%94&_librian_webview=1');
+    }
+    await 山彥.退出();
+    assert.strictEqual(window.location.href, 'file:///game/adv.html?%E5%85%A5%E5%8F%A3=%E8%AE%80%E6%AA%94&_librian_webview=1&_librian_exit=1');
+    assert.strictEqual(loadBridge('', api).山彥, undefined);
     console.log('pywebview bridge tests passed');
 }
 

@@ -4,7 +4,6 @@ import $ from 'jquery'
 import 演出 from './演出.coffee'
 import 控制 from './控制.coffee'
 import 存檔讀檔 from './存檔讀檔.coffee'
-import 調用山彥 from './後端.coffee'
 
 cccc = require('./_統合.sass')
 console.log cccc
@@ -64,20 +63,18 @@ window.onload = ->
                 handler: (val, oldVal) ->
                     山彥.vue更新(val)
                 deep: true
+    await 初始化()
+    演出.準備工作()
     if 入口=='讀檔'
-        初始化().then ->
-            演出.準備工作()
-            存檔讀檔.讀檔準備()
+        await 存檔讀檔.讀檔準備()
     else
-        初始化().then ->
-            演出.準備工作()
-            演出.更新()
+        await 演出.更新()
 
 初始化 = ->
-    調用山彥('初始化').then (狀態)->
-        if 狀態
-            for 鍵, 值 of 狀態
-                v[鍵] = 值
+    狀態 = await 山彥.初始化()
+    if 狀態
+        for 鍵, 值 of 狀態
+            v[鍵] = 值
 
 
 
@@ -97,9 +94,9 @@ window.onload = ->
 
 window.加載完成的初始化 = ->
     $('#加載畫面').fadeOut()
-    初始化().then ->
-        演出.準備工作()
-        演出.更新()
+    await 初始化()
+    演出.準備工作()
+    await 演出.更新()
 
 在線運行 = ->
     if typeof(虛擬核心) == "undefined"
@@ -120,12 +117,12 @@ window.加載完成的初始化 = ->
             this.n += 1
         更新: ->
             演出.改變演出狀態(虛擬核心.演出步[this.n])
-        狀態回調: (步進, callback)->
+        狀態回調: (步進)->
             if 步進
                 this.步進()
-            callback(虛擬核心.演出步[this.n])
-        初始化: (callback)->
-            callback()
+            虛擬核心.演出步[this.n]
+        初始化: ->
+            return
         切換全屏: ->
             doc = window.document
             docEl = doc.documentElement
